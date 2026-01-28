@@ -29,7 +29,7 @@ static const uint16_t screenHeight = 240;
 unsigned long lastActivityTime = 0;
 bool displayOn = true;
 extern float set_temperature; // Variabile globale per la temperatura impostata
-extern float set_umidita; // Variabile globale per l'umidità impostata
+extern int32_t set_umidita; // Variabile globale per l'umidità impostata
 
 lv_obj_t *previous_page = NULL; // puntatore alla pagina che viene chiamata
 lv_obj_t* WiFiList; // Puntatore alla lista delle reti WiFi
@@ -49,8 +49,12 @@ TFT_eSPI tft = TFT_eSPI(screenWidth, screenHeight); // Istanza del display TFT
 SPIClass tsSpi = SPIClass(VSPI);
 XPT2046_Touchscreen ts(XPT2046_CS, XPT2046_IRQ);
 
-/* Funzioni presenti nel programma*/
+/* Prototipo delle funzioni presenti nel programma*/
 extern "C" void salva_programmazione();
+static void update_temperature_arrows(float tempC, float set_temperature);// funzione per aggiornare le frecce di regolazione della temperatura
+void updateWiFiIcon(); // funzione per la gestione delle icone del WiFi
+// static void on_set_temperature_changed(void); // Prototipo della callback per il cambiamento della temperatura impostata
+
 
 /* Calibrazione touchscreen */
 uint16_t touchScreenMinimumX = 200, touchScreenMaximumX = 3700;
@@ -71,12 +75,13 @@ bool connessioneWiFi = false; // flag per registrare lo stato della connessione 
 bool programAccensione = true; // flag per registrare l'attivazione del funzionamento secondo programmazione
 float tMax = 20; // Temperatura massima 
 float tMin = 18; // Temperatura minima 
-float tempC = 0; // Temperatura rilavata dalla sonda DS18D20
+float tempC = 0; // Temperatura rilavata dalla sonda AHT30
+float humC = 0; // Umidità rilevata dalla sonda AHT30
 byte displayFade = 0; // Variabile per il fade del display, in spegnimento ed accensione
 char opzioni[1024] = {0};  // buffer globale per il dropdown delle reti WiFi
+const float TEMP_DB = 0.5f; // Differenziale di temperatura per evitare accensioni/spegnimenti rapidi
+const float HUM_DB = 5; // Differenziale di umidità per evitare accensioni/spegnimenti rapidi
 
-/*Dichiarazione delle funzioni*/
-void updateWiFiIcon(); // funzione per la gestione delle icone del WiFi
 
 // Matrice di selezione (giorni × fasce orarie)
 bool time_selected[7][48] = {false};
@@ -398,7 +403,8 @@ void aggiornaVariabili(lv_timer_t *timer){
   Serial.println (tMin);
   Serial.print("Temperatura: ");
   Serial.printf("set_temperature = %.2f\n", (double)set_temperature);
-  // Serial.println("°C");
+  Serial.print("Umidità: ");
+  Serial.printf("set_umidita = %ld\n", (long)set_umidita);
   Serial.print("Connessione WiFi: ");
   Serial.println(ssid_attivo);
   Serial.print ("Programmazione ");
@@ -893,14 +899,55 @@ static void sht30_timer_cb(lv_timer_t *t) {
   snprintf(bufT, sizeof(bufT), "%.1f", r.temperatureC);
   snprintf(bufH, sizeof(bufH), "%.0f", r.humidityRH);
 
+  tempC = r.temperatureC; // Aggiorna la variabile globale della temperatura
+  humC = r.humidityRH; // Aggiorna la variabile globale dell'umidità
+
   lv_label_set_text(objects.temperatura_interna, bufT);// Aggiorna l'etichetta con il valore della temperatura
   lv_label_set_text(objects.umidita_interna, bufH);// Aggiorna l'etichetta con il valore dell'umidità
+
+  // Aggiorna le frecce di regolazione della temperatura
+  update_temperature_arrows(r.temperatureC, set_temperature); // aggiorna le frecce di regolazione
+}
+
+static void update_temperature_arrows(float tempC, float set_temperature) {
+  // Aggiorna le frecce di regolazione della temperatura
+    if (tempC > set_temperature + TEMP_DB) {
+        // troppo caldo → blu ON, rosso OFF
+        lv_obj_clear_flag(objects.t_giu, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(objects.t_su,  LV_OBJ_FLAG_HIDDEN);
+
+    } else if (tempC < set_temperature - TEMP_DB) {
+        // troppo freddo → rosso ON, blu OFF
+        lv_obj_clear_flag(objects.t_su,  LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(objects.t_giu, LV_OBJ_FLAG_HIDDEN);
+
+    } else {
+        // in banda → entrambe OFF
+        lv_obj_add_flag(objects.t_su,  LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(objects.t_giu, LV_OBJ_FLAG_HIDDEN);
+    }
+  // Aggiorna le frecce di regolazione dell'umidità
+        if (humC > set_umidita + HUM_DB) {
+        // troppo caldo → blu ON, rosso OFF
+        lv_obj_clear_flag(objects.h_giu, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(objects.h_su,  LV_OBJ_FLAG_HIDDEN);
+
+    } else if (humC < set_umidita - HUM_DB) {
+        // troppo freddo → rosso ON, blu OFF
+        lv_obj_clear_flag(objects.h_su,  LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(objects.h_giu, LV_OBJ_FLAG_HIDDEN);
+
+    } else {
+        // in banda → entrambe OFF
+        lv_obj_add_flag(objects.h_su,  LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(objects.h_giu, LV_OBJ_FLAG_HIDDEN);
+    }
 }
 
 void setup() {
   // Disabilita il buffering della stdout per printf()
   setvbuf(stdout, NULL, _IONBF, 0);
-  
+
   // Imposta il pin 21 per evitare un errore di derivante da una chiamata prima che venisse configurato come gpio
   pinMode(BACKLIGHT_PIN, OUTPUT);
   digitalWrite(BACKLIGHT_PIN, HIGH);
