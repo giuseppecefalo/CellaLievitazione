@@ -15,9 +15,13 @@
 #include <FS.h>
 #include <vars.h> // Include il file per le variabili globali
 #include "sht30.h" // Libreria per il sensore di umidità e temperatura SHT30
+#include "PCF8574.h" // Libreria per il PCF8574
 
 // i pin del sht30 sono definti nel file sht30.h
 static bool sht30_ok = false;  // Flag per indicare se il sensore SHT30 è inizializzato correttamente
+
+// Crea l’oggetto PCF8574 passandogli Wire
+PCF8574 pcf(Wire);
 
 // Le reti WiFi disponibili (SSID e password) sono memorizzate nella flash
 
