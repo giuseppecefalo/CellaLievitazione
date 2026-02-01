@@ -44,6 +44,12 @@ static lv_color_t buf[SCREENBUFFER_SIZE_PIXELS];
 
 TFT_eSPI tft = TFT_eSPI(screenWidth, screenHeight); // Istanza del display TFT
 
+// Configurazione relè
+constexpr uint8_t RELAY1 = 0; // Riscaldamento
+constexpr uint8_t RELAY2 = 1; // Raffreddamento
+constexpr uint8_t RELAY3 = 2; // Umidificazione
+constexpr uint8_t RELAY4 = 3; // Deumidificazione
+
 /* Configurazione touchscreen */
 #define XPT2046_IRQ 36
 #define XPT2046_MOSI 32
@@ -83,9 +89,8 @@ float tempC = 0; // Temperatura rilavata dalla sonda AHT30
 float humC = 0; // Umidità rilevata dalla sonda AHT30
 byte displayFade = 0; // Variabile per il fade del display, in spegnimento ed accensione
 char opzioni[1024] = {0};  // buffer globale per il dropdown delle reti WiFi
-const float TEMP_DB = 0.5f; // Differenziale di temperatura per evitare accensioni/spegnimenti rapidi
+const float TEMP_DB = 0.8f; // Differenziale di temperatura per evitare accensioni/spegnimenti rapidi
 const float HUM_DB = 5; // Differenziale di umidità per evitare accensioni/spegnimenti rapidi
-
 
 // Matrice di selezione (giorni × fasce orarie)
 bool time_selected[7][48] = {false};
@@ -919,32 +924,46 @@ static void update_temperature_arrows(float tempC, float set_temperature) {
         // troppo caldo → blu ON, rosso OFF
         lv_obj_clear_flag(objects.t_giu, LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(objects.t_su,  LV_OBJ_FLAG_HIDDEN);
+        pcf.digitalWrite(RELAY1, HIGH);// Disattiva riscaldamento
+        pcf.digitalWrite(RELAY2, LOW);// Attiva raffreddamento
 
     } else if (tempC < set_temperature - TEMP_DB) {
         // troppo freddo → rosso ON, blu OFF
         lv_obj_clear_flag(objects.t_su,  LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(objects.t_giu, LV_OBJ_FLAG_HIDDEN);
+        pcf.digitalWrite(RELAY2, HIGH); // Disattiva raffreddamento
+        pcf.digitalWrite(RELAY1, LOW); // Attiva riscaldamento
 
     } else {
         // in banda → entrambe OFF
         lv_obj_add_flag(objects.t_su,  LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(objects.t_giu, LV_OBJ_FLAG_HIDDEN);
+        pcf.digitalWrite(RELAY1, HIGH); // Disattiva riscaldamento
+        pcf.digitalWrite(RELAY2, HIGH); // Disattiva raffreddamento
     }
   // Aggiorna le frecce di regolazione dell'umidità
         if (humC > set_umidita + HUM_DB) {
         // troppo caldo → blu ON, rosso OFF
         lv_obj_clear_flag(objects.h_giu, LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(objects.h_su,  LV_OBJ_FLAG_HIDDEN);
+        pcf.digitalWrite(RELAY3, HIGH);// Disattiva umidificazione
+        pcf.digitalWrite(RELAY4, LOW);// Attiva deumidificazione
+
 
     } else if (humC < set_umidita - HUM_DB) {
         // troppo freddo → rosso ON, blu OFF
         lv_obj_clear_flag(objects.h_su,  LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(objects.h_giu, LV_OBJ_FLAG_HIDDEN);
+        pcf.digitalWrite(RELAY3, LOW);// Disattiva umidificazione
+        pcf.digitalWrite(RELAY4, HIGH);// Attiva deumidificazione
+
 
     } else {
         // in banda → entrambe OFF
         lv_obj_add_flag(objects.h_su,  LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(objects.h_giu, LV_OBJ_FLAG_HIDDEN);
+        pcf.digitalWrite(RELAY3, HIGH);// Disattiva umidificazione
+        pcf.digitalWrite(RELAY4, HIGH);// Disattiva deumidificazione
     }
 }
 
@@ -963,6 +982,28 @@ void setup() {
 
   bool ok = sht30_begin(); // usa default CYD: SDA27 SCL22 freq 10k addr 0x44
   Serial.println(ok ? "SHT30 trovato" : "SHT30 NON trovato");
+
+/******Impostazione dei relè */
+
+// Inizializza il PCF8574 per i relè
+//  pcf.begin(Wire, 0x20); // indirizzo di default 0  
+    if (!pcf.begin()) {
+    Serial.println("PCF8574 non trovato!");
+    while (true) delay(1000);
+  }
+  Serial.println("PCF8574 pronto.");
+// Configura i pin dei relè come OUTPUT
+  pcf.pinMode(RELAY1, OUTPUT);
+  pcf.pinMode(RELAY2, OUTPUT);
+  pcf.pinMode(RELAY3, OUTPUT);
+  pcf.pinMode(RELAY4, OUTPUT);
+
+// Spegni tutti i relè
+  pcf.digitalWrite(RELAY1, HIGH);
+  pcf.digitalWrite(RELAY2, HIGH);
+  pcf.digitalWrite(RELAY3, HIGH);
+  pcf.digitalWrite(RELAY4, HIGH);
+
 
 //    LittleFS.begin(); // Inizializza la memoria flash per la registrazione dei dati di porgrammazione
 //    carica_programmazione();  // ✅ Caricamento dei dati salvati
