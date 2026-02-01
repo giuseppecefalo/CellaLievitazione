@@ -991,9 +991,7 @@
         "0": {
           "9": {},
           "11": {},
-          "19": {
-            "$selected": true
-          }
+          "19": {}
         }
       },
       "transform": {
@@ -1058,7 +1056,8 @@
   "lvglPart": "MAIN",
   "lvglState": "DEFAULT",
   "lvglExpandedPropertiesGroup": [
-    "TEXT"
+    "LAYOUT",
+    "POSITION AND SIZE"
   ],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,

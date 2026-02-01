@@ -129,8 +129,8 @@ void create_screen_main() {
             // Temperatura
             lv_obj_t *obj = lv_slider_create(parent_obj);
             objects.temperatura = obj;
-            lv_obj_set_pos(obj, 40, 104);
-            lv_obj_set_size(obj, 200, 15);
+            lv_obj_set_pos(obj, 70, 111);
+            lv_obj_set_size(obj, 170, 15);
             lv_slider_set_range(obj, -10, 40);
             lv_obj_add_event_cb(obj, event_handler_cb_main_temperatura, LV_EVENT_ALL, 0);
         }
@@ -138,8 +138,8 @@ void create_screen_main() {
             // umidita
             lv_obj_t *obj = lv_slider_create(parent_obj);
             objects.umidita = obj;
-            lv_obj_set_pos(obj, 40, 161);
-            lv_obj_set_size(obj, 200, 15);
+            lv_obj_set_pos(obj, 70, 166);
+            lv_obj_set_size(obj, 170, 15);
             lv_slider_set_range(obj, 20, 90);
             lv_obj_add_event_cb(obj, event_handler_cb_main_umidita, LV_EVENT_ALL, 0);
         }
@@ -147,8 +147,8 @@ void create_screen_main() {
             // Temp_label
             lv_obj_t *obj = lv_label_create(parent_obj);
             objects.temp_label = obj;
-            lv_obj_set_pos(obj, 40, 126);
-            lv_obj_set_size(obj, 200, LV_SIZE_CONTENT);
+            lv_obj_set_pos(obj, 70, 135);
+            lv_obj_set_size(obj, 170, LV_SIZE_CONTENT);
             lv_label_set_text(obj, "");
             lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
         }
@@ -156,8 +156,8 @@ void create_screen_main() {
             // umidita_label
             lv_obj_t *obj = lv_label_create(parent_obj);
             objects.umidita_label = obj;
-            lv_obj_set_pos(obj, 40, 182);
-            lv_obj_set_size(obj, 200, LV_SIZE_CONTENT);
+            lv_obj_set_pos(obj, 70, 193);
+            lv_obj_set_size(obj, 170, LV_SIZE_CONTENT);
             lv_label_set_text(obj, "");
             lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
         }
@@ -226,6 +226,21 @@ void create_screen_main() {
             lv_obj_set_pos(obj, 259, 66);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
             lv_img_set_src(obj, &img_freccia_blu);
+        }
+        {
+            lv_obj_t *obj = lv_slider_create(parent_obj);
+            lv_obj_set_pos(obj, 26, 110);
+            lv_obj_set_size(obj, 15, 100);
+            lv_slider_set_value(obj, 25, LV_ANIM_OFF);
+        }
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 0, 110);
+            lv_obj_set_size(obj, 50, 100);
+            lv_label_set_text(obj, "Livello");
+            lv_obj_set_style_transform_rotation(obj, 900, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_transform_pivot_y(obj, 20, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_transform_pivot_x(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
         }
     }
     
