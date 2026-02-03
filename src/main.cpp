@@ -968,7 +968,7 @@ static void update_temperature_arrows(float tempC, float set_temperature) {
 }
 
 void setup() {
-  // Disabilita il buffering della stdout per printf() //
+  // Disabilita il buffering della stdout per printf()
   setvbuf(stdout, NULL, _IONBF, 0);
 
   // Imposta il pin 21 per evitare un errore di derivante da una chiamata prima che venisse configurato come gpio
