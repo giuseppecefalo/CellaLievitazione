@@ -92,12 +92,14 @@ void create_screen_main() {
             lv_obj_add_flag(obj, LV_OBJ_FLAG_CHECKABLE);
         }
         {
-            // programmazione
+            // programmazione_menu
             lv_obj_t *obj = lv_label_create(parent_obj);
-            objects.programmazione = obj;
+            objects.programmazione_menu = obj;
             lv_obj_set_pos(obj, 3, 219);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-            lv_label_set_text(obj, "Programmazione");
+            lv_label_set_text(obj, "Programmazione ->");
+            lv_obj_add_event_cb(obj, action_go_programmazione, LV_EVENT_PRESSED, (void *)0);
+            lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
         }
         {
             lv_obj_t *obj = lv_imagebutton_create(parent_obj);
@@ -1340,6 +1342,39 @@ void create_screen_wi_fi_select() {
 void tick_screen_wi_fi_select() {
 }
 
+void create_screen_programmazione() {
+    lv_obj_t *obj = lv_obj_create(0);
+    objects.programmazione = obj;
+    lv_obj_set_pos(obj, 0, 0);
+    lv_obj_set_size(obj, 320, 240);
+    {
+        lv_obj_t *parent_obj = obj;
+        {
+            // Programmazione_label
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            objects.programmazione_label = obj;
+            lv_obj_set_pos(obj, 98, 5);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_text(obj, "Programmazione");
+        }
+        {
+            // Back
+            lv_obj_t *obj = lv_imagebutton_create(parent_obj);
+            objects.back = obj;
+            lv_obj_set_pos(obj, 0, 0);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, 64);
+            lv_imagebutton_set_src(obj, LV_IMAGEBUTTON_STATE_RELEASED, NULL, &img_indietro, NULL);
+            lv_imagebutton_set_src(obj, LV_IMAGEBUTTON_STATE_PRESSED, NULL, &img_indietro, NULL);
+            lv_obj_add_event_cb(obj, action_go_home, LV_EVENT_PRESSED, (void *)0);
+        }
+    }
+    
+    tick_screen_programmazione();
+}
+
+void tick_screen_programmazione() {
+}
+
 
 
 typedef void (*tick_screen_func_t)();
@@ -1347,6 +1382,7 @@ tick_screen_func_t tick_screen_funcs[] = {
     tick_screen_main,
     tick_screen_program,
     tick_screen_wi_fi_select,
+    tick_screen_programmazione,
 };
 void tick_screen(int screen_index) {
     tick_screen_funcs[screen_index]();
@@ -1363,4 +1399,9 @@ void create_screens() {
     create_screen_main();
     create_screen_program();
     create_screen_wi_fi_select();
+    create_screen_programmazione();
+}
+
+void action_go_programmazione(lv_event_t * e){
+    
 }
