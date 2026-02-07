@@ -366,6 +366,9 @@ void action_wi_fi_register(lv_event_t * e)
 
 }
 
-
+// Funzione per il passaggio alla pagina di programmazione
+void action_go_programmazione(lv_event_t * e) {
+    lv_scr_load(objects.programmazione);
+}
 
 

@@ -1361,11 +1361,120 @@ void create_screen_programmazione() {
             // Back
             lv_obj_t *obj = lv_imagebutton_create(parent_obj);
             objects.back = obj;
-            lv_obj_set_pos(obj, 0, 0);
-            lv_obj_set_size(obj, LV_SIZE_CONTENT, 64);
+            lv_obj_set_pos(obj, -1, 0);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, 32);
             lv_imagebutton_set_src(obj, LV_IMAGEBUTTON_STATE_RELEASED, NULL, &img_indietro, NULL);
             lv_imagebutton_set_src(obj, LV_IMAGEBUTTON_STATE_PRESSED, NULL, &img_indietro, NULL);
             lv_obj_add_event_cb(obj, action_go_home, LV_EVENT_PRESSED, (void *)0);
+        }
+        {
+            // Switch1
+            lv_obj_t *obj = lv_switch_create(parent_obj);
+            objects.switch1 = obj;
+            lv_obj_set_pos(obj, 15, 55);
+            lv_obj_set_size(obj, 40, 24);
+        }
+        {
+            // Switch2
+            lv_obj_t *obj = lv_switch_create(parent_obj);
+            objects.switch2 = obj;
+            lv_obj_set_pos(obj, 15, 95);
+            lv_obj_set_size(obj, 40, 25);
+        }
+        {
+            // Switch3
+            lv_obj_t *obj = lv_switch_create(parent_obj);
+            objects.switch3 = obj;
+            lv_obj_set_pos(obj, 15, 135);
+            lv_obj_set_size(obj, 40, 25);
+        }
+        {
+            // Switch4
+            lv_obj_t *obj = lv_switch_create(parent_obj);
+            objects.switch4 = obj;
+            lv_obj_set_pos(obj, 15, 175);
+            lv_obj_set_size(obj, 40, 25);
+        }
+        {
+            // Start
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            objects.start = obj;
+            lv_obj_set_pos(obj, 80, 32);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_text(obj, "Start");
+        }
+        {
+            // Stop
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            objects.stop = obj;
+            lv_obj_set_pos(obj, 154, 32);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_text(obj, "Stop");
+        }
+        {
+            // Timer1
+            lv_obj_t *obj = lv_dropdown_create(parent_obj);
+            objects.timer1 = obj;
+            lv_obj_set_pos(obj, 61, 53);
+            lv_obj_set_size(obj, 72, 28);
+            lv_dropdown_set_options(obj, "00:00\n00:30\n01:00\n01:30\n02:00\n02:30\n03:00\n03:30\n04:00\n04:30\n05:00\n05:30\n06:00\n06:30\n07:00\n07:30\n08:00\n08:30\n09:00\n09:30\n10:00\n10:30\n11:00\n11:30\n12:00\n12:30\n13:00\n13:30\n14:00");
+            lv_obj_set_style_text_font(obj, &lv_font_montserrat_12, LV_PART_MAIN | LV_STATE_PRESSED);
+            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_PRESSED);
+            lv_obj_set_style_text_color(obj, lv_color_hex(0xff212121), LV_PART_SELECTED | LV_STATE_DEFAULT);
+        }
+        {
+            // Timer1_1
+            lv_obj_t *obj = lv_dropdown_create(parent_obj);
+            objects.timer1_1 = obj;
+            lv_obj_set_pos(obj, 135, 53);
+            lv_obj_set_size(obj, 72, 28);
+            lv_dropdown_set_options(obj, "00:00\n00:30\n01:00\n01:30\n02:00\n02:30\n03:00\n03:30\n04:00\n04:30\n05:00\n05:30\n06:00\n06:30\n07:00\n07:30\n08:00\n08:30\n09:00\n09:30\n10:00\n10:30\n11:00\n11:30\n12:00\n12:30\n13:00\n13:30\n14:00");
+            lv_obj_set_style_text_font(obj, &lv_font_montserrat_12, LV_PART_MAIN | LV_STATE_PRESSED);
+            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_PRESSED);
+            lv_obj_set_style_text_color(obj, lv_color_hex(0xff212121), LV_PART_SELECTED | LV_STATE_DEFAULT);
+        }
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 225, 32);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_text(obj, "T°c");
+        }
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            lv_obj_set_pos(obj, 274, 32);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_label_set_text(obj, "Hu%");
+        }
+        {
+            // Timer1_2
+            lv_obj_t *obj = lv_dropdown_create(parent_obj);
+            objects.timer1_2 = obj;
+            lv_obj_set_pos(obj, 210, 53);
+            lv_obj_set_size(obj, 52, 28);
+            lv_dropdown_set_options(obj, "-10\n-9\n-8\n-7\n-6\n");
+            lv_obj_set_style_text_font(obj, &lv_font_montserrat_12, LV_PART_MAIN | LV_STATE_PRESSED);
+            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_PRESSED);
+            lv_obj_set_style_text_color(obj, lv_color_hex(0xff212121), LV_PART_SELECTED | LV_STATE_DEFAULT);
+        }
+        {
+            // Timer1_3
+            lv_obj_t *obj = lv_dropdown_create(parent_obj);
+            objects.timer1_3 = obj;
+            lv_obj_set_pos(obj, 265, 53);
+            lv_obj_set_size(obj, 50, 28);
+            lv_dropdown_set_options(obj, "20\n30\n40\n50\n60\n70\n80\n90");
+            lv_obj_set_style_text_font(obj, &lv_font_montserrat_12, LV_PART_MAIN | LV_STATE_PRESSED);
+            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_PRESSED);
+            lv_obj_set_style_text_color(obj, lv_color_hex(0xff212121), LV_PART_SELECTED | LV_STATE_DEFAULT);
+        }
+        {
+            lv_obj_t *obj = lv_spinbox_create(parent_obj);
+            lv_obj_set_pos(obj, 94, 100);
+            lv_obj_set_size(obj, 77, 35);
+            lv_spinbox_set_digit_format(obj, 5, 0);
+            lv_spinbox_set_range(obj, -99999, 99999);
+            lv_spinbox_set_rollover(obj, false);
+            lv_spinbox_set_step(obj, 1);
         }
     }
     
@@ -1400,8 +1509,4 @@ void create_screens() {
     create_screen_program();
     create_screen_wi_fi_select();
     create_screen_programmazione();
-}
-
-void action_go_programmazione(lv_event_t * e){
-    
 }

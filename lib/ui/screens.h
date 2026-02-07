@@ -92,6 +92,16 @@ typedef struct _objects_t {
     lv_obj_t *obj0;
     lv_obj_t *programmazione_label;
     lv_obj_t *back;
+    lv_obj_t *switch1;
+    lv_obj_t *switch2;
+    lv_obj_t *switch3;
+    lv_obj_t *switch4;
+    lv_obj_t *start;
+    lv_obj_t *stop;
+    lv_obj_t *timer1;
+    lv_obj_t *timer1_1;
+    lv_obj_t *timer1_2;
+    lv_obj_t *timer1_3;
 } objects_t;
 
 extern objects_t objects;
@@ -120,7 +130,6 @@ void tick_screen(int screen_index);
 
 void create_screens();
 
-void action_go_programmazione(lv_event_t * e);
 
 #ifdef __cplusplus
 }

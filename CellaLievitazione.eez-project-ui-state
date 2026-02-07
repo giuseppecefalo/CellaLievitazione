@@ -1,7 +1,7 @@
 {
   "navigation": {
-    "selectedUserPageObject": "[CellaLievitazione.eez-project]:/userPages/0",
-    "selectedGlobalVariableObject": "[CellaLievitazione.eez-project]:/variables/globalVariables/3",
+    "selectedUserPageObject": "[CellaLievitazione.eez-project]:/userPages/3",
+    "selectedGlobalVariableObject": "[CellaLievitazione.eez-project]:/variables/globalVariables/2",
     "selectedBitmapObject": "[CellaLievitazione.eez-project]:/bitmaps/16",
     "subnavigationSelectedItems": {
       "variables-tab/sub-navigation/selected-item": "Global"
@@ -191,7 +191,7 @@
             {
               "type": "tabset",
               "id": "EDITORS",
-              "weight": 65,
+              "weight": 56.889238020424195,
               "selected": 1,
               "enableDeleteWhenEmpty": false,
               "enableClose": false,
@@ -211,10 +211,10 @@
                 {
                   "type": "tab",
                   "id": "#b008cff8-24f2-479f-9947-9056fd8b5083",
-                  "name": "Main",
+                  "name": "Programmazione",
                   "component": "editor",
                   "config": {
-                    "objectPath": "[CellaLievitazione.eez-project]:/userPages/0",
+                    "objectPath": "[CellaLievitazione.eez-project]:/userPages/3",
                     "permanent": false
                   },
                   "icon": "svg:page"
@@ -225,7 +225,7 @@
             {
               "type": "row",
               "id": "#77f1d995-1afc-4f8e-960a-273386761ec2",
-              "weight": 20,
+              "weight": 28.110761979575805,
               "children": [
                 {
                   "type": "tabset",
@@ -989,7 +989,11 @@
     "[CellaLievitazione.eez-project]:/userPages/0[flow-state]": {
       "selection": {
         "0": {
+          "2": {},
           "9": {},
+          "10": {
+            "$selected": true
+          },
           "11": {},
           "19": {}
         }
@@ -997,7 +1001,7 @@
       "transform": {
         "translate": {
           "x": -160,
-          "y": -20
+          "y": -120
         },
         "scale": 1
       },
@@ -1039,6 +1043,24 @@
         "secondToPx": 200,
         "scrollLeft": 0
       }
+    },
+    "[CellaLievitazione.eez-project]:/userPages/3[flow-state]": {
+      "selection": {
+        "0": {}
+      },
+      "transform": {
+        "translate": {
+          "x": -160,
+          "y": -120
+        },
+        "scale": 1
+      },
+      "timeline": {
+        "isEditorActive": false,
+        "position": 0,
+        "secondToPx": 200,
+        "scrollLeft": 0
+      }
     }
   },
   "activeOutputSection": 0,
@@ -1055,10 +1077,7 @@
   "selectedStylePropertyName": "",
   "lvglPart": "MAIN",
   "lvglState": "DEFAULT",
-  "lvglExpandedPropertiesGroup": [
-    "LAYOUT",
-    "POSITION AND SIZE"
-  ],
+  "lvglExpandedPropertiesGroup": [],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,
   "flowZoom": 1,
