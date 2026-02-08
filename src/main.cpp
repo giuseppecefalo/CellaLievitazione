@@ -16,6 +16,8 @@
 #include <vars.h> // Include il file per le variabili globali
 #include "sht30.h" // Libreria per il sensore di umidità e temperatura SHT30
 #include "PCF8574.h" // Libreria per il PCF8574
+#include <SD.h> // Per la gestione della scheda SD
+
 
 // i pin del sht30 sono definti nel file sht30.h
 static bool sht30_ok = false;  // Flag per indicare se il sensore SHT30 è inizializzato correttamente
@@ -34,6 +36,17 @@ unsigned long lastActivityTime = 0;
 bool displayOn = true;
 extern float set_temperature; // Variabile globale per la temperatura impostata
 extern int32_t set_umidita; // Variabile globale per l'umidità impostata
+
+// Pin tipici SD su ESP32 (VSPI)
+static const int SD_CS   = 5; // Chip Select (CS) per la SD card
+static const int SD_SCK  = 18;// Clock (SCK) per la SD card
+static const int SD_MISO = 19;// Master In Slave Out (MISO) per la SD card
+static const int SD_MOSI = 23;// Master Out Slave In (MOSI) per la SD card
+
+SPIClass sdSPI(VSPI);// Crea un'istanza SPI dedicata per la SD card, usando i pin VSPI standard
+
+bool sdOk = false;// Flag per indicare se la scheda SD è inizializzata correttamente
+bool ricetteLoaded; // Flag per indicare se le ricette sono state caricate correttamente
 
 lv_obj_t *previous_page = NULL; // puntatore alla pagina che viene chiamata
 lv_obj_t* WiFiList; // Puntatore alla lista delle reti WiFi
@@ -56,7 +69,9 @@ constexpr uint8_t RELAY4 = 3; // Deumidificazione
 #define XPT2046_MISO 39
 #define XPT2046_CLK 25
 #define XPT2046_CS 33
-SPIClass tsSpi = SPIClass(VSPI);
+//SPIClass tsSpi = SPIClass(VSPI); //Cambiato con la riga successiva perchè bloccava la SD card
+SPIClass tsSpi(HSPI);// Crea un'istanza SPI dedicata per il touchscreen, usando i pin HSPI standard per consentire il funzionamento della SD
+
 XPT2046_Touchscreen ts(XPT2046_CS, XPT2046_IRQ);
 
 /* Prototipo delle funzioni presenti nel programma*/
@@ -64,7 +79,6 @@ extern "C" void salva_programmazione();
 static void update_temperature_arrows(float tempC, float set_temperature);// funzione per aggiornare le frecce di regolazione della temperatura
 void updateWiFiIcon(); // funzione per la gestione delle icone del WiFi
 // static void on_set_temperature_changed(void); // Prototipo della callback per il cambiamento della temperatura impostata
-
 
 /* Calibrazione touchscreen */
 uint16_t touchScreenMinimumX = 200, touchScreenMaximumX = 3700;
@@ -967,6 +981,75 @@ static void update_temperature_arrows(float tempC, float set_temperature) {
     }
 }
 
+static void loadRicetteFromSD() {
+  Serial.println(">>> Carico elenco ricette da SD");
+
+  // Pulisce il dropdown prima di riempirlo
+  lv_dropdown_clear_options(objects.elenco_ricette);
+
+  File dir = SD.open("/ricette");
+  if (!dir || !dir.isDirectory()) {
+    Serial.println(">>> ERRORE: /ricette non apribile");
+    return;
+  }
+
+  bool trovato = false;
+
+  for (File f = dir.openNextFile(); f; f = dir.openNextFile()) {
+    if (!f.isDirectory()) {
+      const char * nome = f.name();
+
+      Serial.print(">>> Aggiungo: ");
+      Serial.println(nome);
+
+      // Aggiunge una voce al dropdown
+      lv_dropdown_add_option(objects.elenco_ricette, nome, LV_DROPDOWN_POS_LAST);
+      trovato = true;
+    }
+    f.close();
+  }
+
+  dir.close();
+
+  if (!trovato) {
+    lv_dropdown_add_option(objects.elenco_ricette, "(nessuna ricetta)", LV_DROPDOWN_POS_LAST);
+  }
+}
+
+static void readAndShowRicetta_cb(void * p) {
+  char opt[128];
+  lv_dropdown_get_selected_str(objects.elenco_ricette, opt, sizeof(opt));
+
+  if (opt[0] == '\0' || opt[0] == '(') {
+    lv_textarea_set_text(objects.descrizione, "");
+    return;
+  }
+
+  String path = "/ricette/";
+  path += opt;
+
+  File f = SD.open(path.c_str(), FILE_READ);
+  if (!f) {
+    lv_textarea_set_text(objects.descrizione, "Errore: file non apribile");
+    return;
+  }
+
+  String txt;
+  txt.reserve((size_t)f.size() + 1);
+  while (f.available()) {
+    txt += (char)f.read();
+  }
+  f.close();
+
+  lv_textarea_set_text(objects.descrizione, txt.c_str());
+}
+
+// Questa è la funzione chiamata dall'evento EEZ (Value Changed)
+extern "C" void showSelectedRicettaInTextarea(void) {
+  lv_async_call(readAndShowRicetta_cb, nullptr);
+}
+
+
 void setup() {
   // Disabilita il buffering della stdout per printf()
   setvbuf(stdout, NULL, _IONBF, 0);
@@ -982,6 +1065,15 @@ void setup() {
 
   bool ok = sht30_begin(); // usa default CYD: SDA27 SCL22 freq 10k addr 0x44
   Serial.println(ok ? "SHT30 trovato" : "SHT30 NON trovato");
+
+/*****Impostazione SD Card ****/
+
+sdSPI.begin(SD_SCK, SD_MISO, SD_MOSI, SD_CS); // Inizializza SPI per SD card
+sdOk = SD.begin(SD_CS, sdSPI, 20000000); // Prova a montare la SD card e stampa il risultato
+Serial.println(sdOk ? "SD: mount OK" : "SD: mount FALLITO");// Se fallisce, verifica che la SD card sia inserita correttamente e che i pin siano collegati come previsto. Se continua a fallire, potrebbe essere un problema di compatibilità o di alimentazione della SD card.
+Serial.print("SD begin in setup: ");
+Serial.println(sdOk ? "OK" : "FAIL");
+
 
 /******Impostazione dei relè */
 
@@ -1099,5 +1191,14 @@ void loop() {
   delay(50);
    // Chiama la funzione per disegnare i 96 cavalieri
   // crea_cerchio_di_label(lv_scr_act());
+
+
+if (lv_scr_act() == objects.ricette) {
+    if (!ricetteLoaded) {
+        ricetteLoaded = true;          // blocca le chiamate successive
+        loadRicetteFromSD();        // <-- VIENE CHIAMATA QUI
+    }
+}
+
 
 }

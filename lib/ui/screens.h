@@ -11,7 +11,7 @@ typedef struct _objects_t {
     lv_obj_t *main;
     lv_obj_t *program;
     lv_obj_t *wi_fi_select;
-    lv_obj_t *programmazione;
+    lv_obj_t *ricette;
     lv_obj_t *temperatura;
     lv_obj_t *umidita;
     lv_obj_t *intestazione;
@@ -19,7 +19,7 @@ typedef struct _objects_t {
     lv_obj_t *wi_fi_off;
     lv_obj_t *auto_btn;
     lv_obj_t *setup_button;
-    lv_obj_t *programmazione_menu;
+    lv_obj_t *programmazione;
     lv_obj_t *wi_fi_x;
     lv_obj_t *wi_fi_name;
     lv_obj_t *temp_label;
@@ -90,8 +90,9 @@ typedef struct _objects_t {
     lv_obj_t *btn_wi_fi_send;
     lv_obj_t *wi_fi_btn_save;
     lv_obj_t *obj0;
-    lv_obj_t *programmazione_label;
     lv_obj_t *back;
+    lv_obj_t *elenco_ricette;
+    lv_obj_t *descrizione;
 } objects_t;
 
 extern objects_t objects;
@@ -100,7 +101,7 @@ enum ScreensEnum {
     SCREEN_ID_MAIN = 1,
     SCREEN_ID_PROGRAM = 2,
     SCREEN_ID_WI_FI_SELECT = 3,
-    SCREEN_ID_PROGRAMMAZIONE = 4,
+    SCREEN_ID_RICETTE = 4,
 };
 
 void create_screen_main();
@@ -112,15 +113,14 @@ void tick_screen_program();
 void create_screen_wi_fi_select();
 void tick_screen_wi_fi_select();
 
-void create_screen_programmazione();
-void tick_screen_programmazione();
+void create_screen_ricette();
+void tick_screen_ricette();
 
 void tick_screen_by_id(enum ScreensEnum screenId);
 void tick_screen(int screen_index);
 
 void create_screens();
 
-void action_go_programmazione(lv_event_t * e);
 
 #ifdef __cplusplus
 }

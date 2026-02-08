@@ -92,14 +92,14 @@ void create_screen_main() {
             lv_obj_add_flag(obj, LV_OBJ_FLAG_CHECKABLE);
         }
         {
-            // programmazione_menu
+            // programmazione
             lv_obj_t *obj = lv_label_create(parent_obj);
-            objects.programmazione_menu = obj;
-            lv_obj_set_pos(obj, 3, 219);
+            objects.programmazione = obj;
+            lv_obj_set_pos(obj, 3, 222);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-            lv_label_set_text(obj, "Programmazione ->");
-            lv_obj_add_event_cb(obj, action_go_programmazione, LV_EVENT_PRESSED, (void *)0);
-            lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
+            lv_label_set_text(obj, "Ricette");
+            lv_obj_add_event_cb(obj, action_go_to_ricette, LV_EVENT_PRESSED, (void *)0);
+            lv_obj_add_flag(obj, LV_OBJ_FLAG_CHECKABLE|LV_OBJ_FLAG_CLICKABLE);
         }
         {
             lv_obj_t *obj = lv_imagebutton_create(parent_obj);
@@ -1342,37 +1342,54 @@ void create_screen_wi_fi_select() {
 void tick_screen_wi_fi_select() {
 }
 
-void create_screen_programmazione() {
+void create_screen_ricette() {
     lv_obj_t *obj = lv_obj_create(0);
-    objects.programmazione = obj;
+    objects.ricette = obj;
     lv_obj_set_pos(obj, 0, 0);
     lv_obj_set_size(obj, 320, 240);
     {
         lv_obj_t *parent_obj = obj;
         {
-            // Programmazione_label
             lv_obj_t *obj = lv_label_create(parent_obj);
-            objects.programmazione_label = obj;
-            lv_obj_set_pos(obj, 98, 5);
+            lv_obj_set_pos(obj, 78, 3);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-            lv_label_set_text(obj, "Programmazione");
+            lv_label_set_text(obj, "Programmi automatici");
         }
         {
-            // Back
+            // back
             lv_obj_t *obj = lv_imagebutton_create(parent_obj);
             objects.back = obj;
             lv_obj_set_pos(obj, 0, 0);
-            lv_obj_set_size(obj, LV_SIZE_CONTENT, 64);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, 32);
             lv_imagebutton_set_src(obj, LV_IMAGEBUTTON_STATE_RELEASED, NULL, &img_indietro, NULL);
             lv_imagebutton_set_src(obj, LV_IMAGEBUTTON_STATE_PRESSED, NULL, &img_indietro, NULL);
             lv_obj_add_event_cb(obj, action_go_home, LV_EVENT_PRESSED, (void *)0);
         }
+        {
+            // elenco_ricette
+            lv_obj_t *obj = lv_dropdown_create(parent_obj);
+            objects.elenco_ricette = obj;
+            lv_obj_set_pos(obj, 16, 34);
+            lv_obj_set_size(obj, 289, LV_SIZE_CONTENT);
+            lv_dropdown_set_options(obj, "Option 1\nOption 2\nOption 3");
+            lv_obj_add_event_cb(obj, action_elenco_ricette_changed, LV_EVENT_VALUE_CHANGED, (void *)0);
+        }
+        {
+            // descrizione
+            lv_obj_t *obj = lv_textarea_create(parent_obj);
+            objects.descrizione = obj;
+            lv_obj_set_pos(obj, 16, 93);
+            lv_obj_set_size(obj, 289, 113);
+            lv_textarea_set_max_length(obj, 128);
+            lv_textarea_set_one_line(obj, false);
+            lv_textarea_set_password_mode(obj, false);
+        }
     }
     
-    tick_screen_programmazione();
+    tick_screen_ricette();
 }
 
-void tick_screen_programmazione() {
+void tick_screen_ricette() {
 }
 
 
@@ -1382,7 +1399,7 @@ tick_screen_func_t tick_screen_funcs[] = {
     tick_screen_main,
     tick_screen_program,
     tick_screen_wi_fi_select,
-    tick_screen_programmazione,
+    tick_screen_ricette,
 };
 void tick_screen(int screen_index) {
     tick_screen_funcs[screen_index]();
@@ -1399,9 +1416,5 @@ void create_screens() {
     create_screen_main();
     create_screen_program();
     create_screen_wi_fi_select();
-    create_screen_programmazione();
-}
-
-void action_go_programmazione(lv_event_t * e){
-    
+    create_screen_ricette();
 }

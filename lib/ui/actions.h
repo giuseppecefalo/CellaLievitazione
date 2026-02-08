@@ -19,7 +19,8 @@ extern void action_wi_fi_page_selet(lv_event_t * e);
 extern void action_wi_fi_selectef_from_list(lv_event_t * e);
 extern void action_password_view(lv_event_t * e);
 extern void action_wi_fi_register(lv_event_t * e);
-extern void action_go_programmazione(lv_event_t * e);
+extern void action_go_to_ricette(lv_event_t * e);
+extern void action_elenco_ricette_changed(lv_event_t * e);
 
 
 #ifdef __cplusplus

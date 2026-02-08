@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "selectedUserPageObject": "[CellaLievitazione.eez-project]:/userPages/0",
+    "selectedUserPageObject": "[CellaLievitazione.eez-project]:/userPages/3",
     "selectedGlobalVariableObject": "[CellaLievitazione.eez-project]:/variables/globalVariables/3",
     "selectedBitmapObject": "[CellaLievitazione.eez-project]:/bitmaps/16",
     "subnavigationSelectedItems": {
@@ -211,10 +211,10 @@
                 {
                   "type": "tab",
                   "id": "#b008cff8-24f2-479f-9947-9056fd8b5083",
-                  "name": "Main",
+                  "name": "Ricette",
                   "component": "editor",
                   "config": {
-                    "objectPath": "[CellaLievitazione.eez-project]:/userPages/0",
+                    "objectPath": "[CellaLievitazione.eez-project]:/userPages/3",
                     "permanent": false
                   },
                   "icon": "svg:page"
@@ -989,6 +989,9 @@
     "[CellaLievitazione.eez-project]:/userPages/0[flow-state]": {
       "selection": {
         "0": {
+          "5": {
+            "$selected": true
+          },
           "9": {},
           "11": {},
           "19": {}
@@ -997,7 +1000,7 @@
       "transform": {
         "translate": {
           "x": -160,
-          "y": -20
+          "y": -120
         },
         "scale": 1
       },
@@ -1025,11 +1028,37 @@
       }
     },
     "[CellaLievitazione.eez-project]:/userPages/2[flow-state]": {
-      "selection": {},
+      "selection": {
+        "0": {
+          "1": {
+            "$selected": true
+          }
+        }
+      },
       "transform": {
         "translate": {
           "x": -160,
           "y": -120
+        },
+        "scale": 1
+      },
+      "timeline": {
+        "isEditorActive": false,
+        "position": 0,
+        "secondToPx": 200,
+        "scrollLeft": 0
+      }
+    },
+    "[CellaLievitazione.eez-project]:/userPages/3[flow-state]": {
+      "selection": {
+        "0": {
+          "1": {}
+        }
+      },
+      "transform": {
+        "translate": {
+          "x": -160,
+          "y": -220
         },
         "scale": 1
       },

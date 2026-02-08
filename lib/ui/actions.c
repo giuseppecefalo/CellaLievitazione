@@ -365,7 +365,18 @@ void action_wi_fi_register(lv_event_t * e)
     connect_to_wifi(ssid, password);
 
 }
+// Flag definito nel main
+extern bool ricetteLoaded;// già dichiarato prima nel main ma è necessario esternarlo anche qui
 
+void action_go_to_ricette(lv_event_t * e){
+    lv_scr_load(objects.ricette);
+    ricetteLoaded = false;   // forza il caricamento SOLO alla prossima apertura
+}
 
+extern void showSelectedRicettaInTextarea(); // dichiarazione della funzione definita in main.cpp
 
-
+void action_elenco_ricette_changed(lv_event_t * e) { // callback per aggiornamento della textarea con la ricetta selezionata
+    if(lv_event_get_code(e) == LV_EVENT_VALUE_CHANGED) {
+        showSelectedRicettaInTextarea();
+    }
+}    

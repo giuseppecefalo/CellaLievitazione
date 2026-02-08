@@ -1,0 +1,66 @@
+#include <Arduino.h>
+#include <SPI.h>
+#include <SD.h>
+
+// Pin tipici SD su ESP32 (VSPI)
+static const int SD_CS   = 5;
+static const int SD_SCK  = 18;
+static const int SD_MISO = 19;
+static const int SD_MOSI = 23;
+
+SPIClass sdSPI(VSPI);
+
+void listDir(const char * path) {
+  Serial.print("Contenuto della directory: ");
+  Serial.println(path);
+
+  File dir = SD.open(path);
+  if (!dir) {
+    Serial.println("Errore: directory non apribile");
+    return;
+  }
+  if (!dir.isDirectory()) {
+    Serial.println("Errore: il path non è una directory");
+    dir.close();
+    return;
+  }
+
+  File file = dir.openNextFile();
+  while (file) {
+    Serial.print(" - ");
+    Serial.print(file.name());
+    if (file.isDirectory()) {
+      Serial.println(" /");
+    } else {
+      Serial.print(" (");
+      Serial.print(file.size());
+      Serial.println(" bytes)");
+    }
+    file.close();
+    file = dir.openNextFile();
+  }
+  dir.close();
+}
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  Serial.println("\nAvvio test SD...");
+
+  sdSPI.begin(SD_SCK, SD_MISO, SD_MOSI, SD_CS);
+
+  if (!SD.begin(SD_CS, sdSPI, 20000000)) {
+    Serial.println("SD: mount FALLITO");
+    return;
+  }
+
+  Serial.println("SD: mount OK");
+
+  // Lista solo la directory delle ricette
+  listDir("/ricette");
+}
+
+void loop() {
+  // Niente
+}
