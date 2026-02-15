@@ -1347,6 +1347,7 @@ void create_screen_ricette() {
     objects.ricette = obj;
     lv_obj_set_pos(obj, 0, 0);
     lv_obj_set_size(obj, 320, 240);
+    lv_obj_add_event_cb(obj, action_setup_tabella_ricette, LV_EVENT_SCREEN_LOADED, (void *)0);
     {
         lv_obj_t *parent_obj = obj;
         {
@@ -1379,10 +1380,18 @@ void create_screen_ricette() {
             lv_obj_t *obj = lv_textarea_create(parent_obj);
             objects.descrizione = obj;
             lv_obj_set_pos(obj, 16, 93);
-            lv_obj_set_size(obj, 289, 113);
+            lv_obj_set_size(obj, 289, 40);
             lv_textarea_set_max_length(obj, 128);
             lv_textarea_set_one_line(obj, false);
             lv_textarea_set_password_mode(obj, false);
+        }
+        {
+            // tabellaRicette
+            lv_obj_t *obj = lv_table_create(parent_obj);
+            objects.tabella_ricette = obj;
+            lv_obj_set_pos(obj, 16, 140);
+            lv_obj_set_size(obj, 289, 100);
+            lv_obj_set_style_text_font(obj, &lv_font_montserrat_10, LV_PART_MAIN | LV_STATE_DEFAULT);
         }
     }
     

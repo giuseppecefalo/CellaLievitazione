@@ -380,3 +380,83 @@ void action_elenco_ricette_changed(lv_event_t * e) { // callback per aggiornamen
         showSelectedRicettaInTextarea();
     }
 }    
+
+void setupTabellaRicette(void) {
+  lv_obj_t *t = objects.tabella_ricette;
+
+  // 5 colonne: Passo, Ora, T, U, Liev
+  lv_table_set_col_cnt(t, 5);
+  lv_table_set_row_cnt(t, 2); // header + 1 riga test
+
+  // Usa font piccolo
+  lv_obj_set_style_text_font(t, &lv_font_montserrat_10, LV_PART_MAIN);
+  lv_obj_set_style_text_font(t, &lv_font_montserrat_10, LV_PART_ITEMS);
+
+  // Riduci padding celle (questo compatta davvero!)
+  lv_obj_set_style_pad_left(t,  1, LV_PART_ITEMS);
+  lv_obj_set_style_pad_right(t, 1, LV_PART_ITEMS);
+  lv_obj_set_style_pad_top(t,   0, LV_PART_ITEMS);
+  lv_obj_set_style_pad_bottom(t,0, LV_PART_ITEMS);
+
+  // Riduci padding generale widget
+  lv_obj_set_style_pad_left(t,  0, LV_PART_MAIN);
+  lv_obj_set_style_pad_right(t, 0, LV_PART_MAIN);
+  lv_obj_set_style_pad_top(t,   0, LV_PART_MAIN);
+  lv_obj_set_style_pad_bottom(t,0, LV_PART_MAIN);
+
+  // Larghezze colonne (tarate per Montserrat 10 e i tuoi valori massimi)
+  lv_table_set_col_width(t, 0, 28);  // Passo (es: "10")
+  lv_table_set_col_width(t, 1, 60);  // Ora (es: "24:00")
+  lv_table_set_col_width(t, 2, 48);  // Temp (es: "25.5")
+  lv_table_set_col_width(t, 3, 40);  // Umid (es: "90")
+  lv_table_set_col_width(t, 4, 45);  // Liev (es: "80")
+
+  // Header
+  lv_table_set_cell_value(t, 0, 0, "Pa");
+  lv_table_set_cell_value(t, 0, 1, "Ora");
+  lv_table_set_cell_value(t, 0, 2, "T");
+  lv_table_set_cell_value(t, 0, 3, "U");
+  lv_table_set_cell_value(t, 0, 4, "Lie");
+
+  // Riga test (per verificare formattazione)
+  lv_table_set_cell_value(t, 1, 0, "10");
+  lv_table_set_cell_value(t, 1, 1, "24:00");
+  lv_table_set_cell_value(t, 1, 2, "25.5");
+  lv_table_set_cell_value(t, 1, 3, "90");
+  lv_table_set_cell_value(t, 1, 4, "80");
+}
+
+
+void action_setup_tabella_ricette(lv_event_t * e){
+    setupTabellaRicette();
+}
+
+#include <string.h>
+
+void popolaTabellaDaTestoRicetta(const char *txt) {
+  lv_obj_t *t = objects.tabella_ricette;
+
+  // Anche se usiamo solo la colonna 0, fissiamo 5 colonne
+  lv_table_set_col_cnt(t, 5);
+
+  // Lascia l'header (riga 0)
+  lv_table_set_row_cnt(t, 1);
+
+  if (!txt || !txt[0]) return;
+
+  static char buf[4096];
+  strncpy(buf, txt, sizeof(buf) - 1);
+  buf[sizeof(buf) - 1] = '\0';
+
+  char *saveTok = NULL;
+  char *tok = strtok_r(buf, ";", &saveTok);
+
+  while (tok) {
+    // Aggiungi una riga e scrivi tutto in colonna 0
+    int r = lv_table_get_row_cnt(t);
+    lv_table_set_row_cnt(t, r + 1);
+    lv_table_set_cell_value(t, r, 0, tok);
+
+    tok = strtok_r(NULL, ";", &saveTok);
+  }
+}

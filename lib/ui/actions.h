@@ -2,7 +2,6 @@
 #define EEZ_LVGL_UI_EVENTS_H
 
 #include "lvgl.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,7 +20,8 @@ extern void action_password_view(lv_event_t * e);
 extern void action_wi_fi_register(lv_event_t * e);
 extern void action_go_to_ricette(lv_event_t * e);
 extern void action_elenco_ricette_changed(lv_event_t * e);
-
+extern void action_setup_tabella_ricette(lv_event_t * e);
+extern void popolaTabellaDaTestoRicetta(const char *txt);
 
 #ifdef __cplusplus
 }

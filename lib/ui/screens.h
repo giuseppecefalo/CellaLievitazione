@@ -93,6 +93,7 @@ typedef struct _objects_t {
     lv_obj_t *back;
     lv_obj_t *elenco_ricette;
     lv_obj_t *descrizione;
+    lv_obj_t *tabella_ricette;
 } objects_t;
 
 extern objects_t objects;

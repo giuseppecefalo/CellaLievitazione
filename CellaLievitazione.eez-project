@@ -250,6 +250,14 @@
       "localVariables": [],
       "userProperties": [],
       "name": "elenco_ricette_changed"
+    },
+    {
+      "objID": "fcc2b509-b25d-4471-e08f-e7f4df76395c",
+      "components": [],
+      "connectionLines": [],
+      "localVariables": [],
+      "userProperties": [],
+      "name": "setupTabellaRicette"
     }
   ],
   "userPages": [
@@ -6932,7 +6940,15 @@
             "childStyles": []
           },
           "timeline": [],
-          "eventHandlers": [],
+          "eventHandlers": [
+            {
+              "objID": "f24e24be-6306-4028-b557-19459e0da991",
+              "eventName": "SCREEN_LOADED",
+              "handlerType": "action",
+              "action": "setupTabellaRicette",
+              "userData": 0
+            }
+          ],
           "leftUnit": "px",
           "topUnit": "px",
           "widthUnit": "px",
@@ -7089,7 +7105,7 @@
               "left": 16,
               "top": 93,
               "width": 289,
-              "height": 113,
+              "height": 40,
               "customInputs": [],
               "customOutputs": [],
               "style": {
@@ -7129,6 +7145,53 @@
               "passwordMode": false,
               "acceptedCharacters": "",
               "maxTextLength": 128
+            },
+            {
+              "objID": "b5987f8e-3f7a-43ca-940c-47611caef4ab",
+              "type": "LVGLTableWidget",
+              "left": 16,
+              "top": 140,
+              "width": 289,
+              "height": 100,
+              "customInputs": [],
+              "customOutputs": [],
+              "style": {
+                "objID": "ea216d8f-cc6d-4b5d-f69f-50f76f393ba2",
+                "useStyle": "default",
+                "conditionalStyles": [],
+                "childStyles": []
+              },
+              "timeline": [],
+              "eventHandlers": [],
+              "identifier": "tabellaRicette",
+              "leftUnit": "px",
+              "topUnit": "px",
+              "widthUnit": "px",
+              "heightUnit": "px",
+              "children": [],
+              "widgetFlags": "CLICK_FOCUSABLE|GESTURE_BUBBLE|PRESS_LOCK|SCROLLABLE|SCROLL_CHAIN_HOR|SCROLL_CHAIN_VER|SCROLL_ELASTIC|SCROLL_MOMENTUM|SCROLL_WITH_ARROW|SNAPPABLE",
+              "hiddenFlagType": "literal",
+              "clickableFlag": true,
+              "clickableFlagType": "literal",
+              "flagScrollbarMode": "",
+              "flagScrollDirection": "",
+              "scrollSnapX": "",
+              "scrollSnapY": "",
+              "checkedStateType": "literal",
+              "disabledStateType": "literal",
+              "states": "",
+              "localStyles": {
+                "objID": "a1451b13-5444-4c3a-95ea-0caf57cb3fed",
+                "definition": {
+                  "MAIN": {
+                    "DEFAULT": {
+                      "text_font": "MONTSERRAT_10"
+                    }
+                  }
+                }
+              },
+              "group": "",
+              "groupIndex": 0
             }
           ],
           "widgetFlags": "CLICKABLE|PRESS_LOCK|CLICK_FOCUSABLE|GESTURE_BUBBLE|SNAPPABLE|SCROLLABLE|SCROLL_ELASTIC|SCROLL_MOMENTUM|SCROLL_CHAIN_HOR|SCROLL_CHAIN_VER",

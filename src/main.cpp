@@ -1016,37 +1016,50 @@ static void loadRicetteFromSD() {
   }
 }
 
+static void mostraErroreInTabella(const char *msg) {
+  lv_obj_t *t = objects.tabella_ricette;
+
+  // lascia header + 1 riga
+  lv_table_set_row_cnt(t, 2);
+
+  // messaggio in prima colonna; le altre vuote
+  lv_table_set_cell_value(t, 1, 0, msg);
+  lv_table_set_cell_value(t, 1, 1, "");
+  lv_table_set_cell_value(t, 1, 2, "");
+  lv_table_set_cell_value(t, 1, 3, "");
+  lv_table_set_cell_value(t, 1, 4, "");
+}
+
 static void readAndShowRicetta_cb(void * p) {
   char opt[128];
   lv_dropdown_get_selected_str(objects.elenco_ricette, opt, sizeof(opt));
 
   if (opt[0] == '\0' || opt[0] == '(') {
-    lv_textarea_set_text(objects.descrizione, "");
+    lv_table_set_row_cnt(objects.tabella_ricette, 1);
     return;
   }
-
   String path = "/ricette/";
   path += opt;
 
   File f = SD.open(path.c_str(), FILE_READ);
   if (!f) {
-    lv_textarea_set_text(objects.descrizione, "Errore: file non apribile");
+    lv_table_set_row_cnt(objects.tabella_ricette, 2);
+    lv_table_set_cell_value(objects.tabella_ricette, 1, 0, "Errore file");
     return;
   }
 
   String txt;
   txt.reserve((size_t)f.size() + 1);
-  while (f.available()) {
-    txt += (char)f.read();
-  }
+  while (f.available()) txt += (char)f.read();
   f.close();
 
-  lv_textarea_set_text(objects.descrizione, txt.c_str());
+  //extern "C"  Qui riempiamo la tabella
+  popolaTabellaDaTestoRicetta(txt.c_str());
 }
 
 // Questa è la funzione chiamata dall'evento EEZ (Value Changed)
 extern "C" void showSelectedRicettaInTextarea(void) {
-  lv_async_call(readAndShowRicetta_cb, nullptr);
+  readAndShowRicetta_cb(NULL);
 }
 
 

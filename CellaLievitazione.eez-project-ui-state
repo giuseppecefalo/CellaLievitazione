@@ -1052,13 +1052,16 @@
     "[CellaLievitazione.eez-project]:/userPages/3[flow-state]": {
       "selection": {
         "0": {
-          "1": {}
+          "1": {},
+          "4": {
+            "$selected": true
+          }
         }
       },
       "transform": {
         "translate": {
           "x": -160,
-          "y": -220
+          "y": -20
         },
         "scale": 1
       },
@@ -1085,8 +1088,7 @@
   "lvglPart": "MAIN",
   "lvglState": "DEFAULT",
   "lvglExpandedPropertiesGroup": [
-    "LAYOUT",
-    "POSITION AND SIZE"
+    "TEXT"
   ],
   "showInactiveFlowsInDebugger": true,
   "globalFlowZoom": true,
